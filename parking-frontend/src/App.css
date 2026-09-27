@@ -1,0 +1,220 @@
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #080808;
+    color: white;
+}
+
+.app {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 30px 0;
+}
+
+h1 {
+    text-align: center;
+    color: #00bfa6;
+    margin-bottom: 35px;
+}
+
+h2 {
+    color: #00bfa6;
+    margin-bottom: 20px;
+}
+
+.section {
+    background: #111111;
+    border: 1px solid #1e3d39;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+input,
+select {
+    padding: 10px;
+    margin: 5px 0 15px;
+    background: #080808;
+    color: white;
+    border: 1px solid #315c56;
+    border-radius: 5px;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #00bfa6;
+}
+
+button {
+    padding: 10px 16px;
+    background: #00aF9a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #00cdb5;
+}
+.slots-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+}
+
+.slot-box {
+    height: 140px;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    background: #0b1010;
+
+    border: 2px solid #00bfa6;
+    border-radius: 8px;
+}
+
+.slot-number {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.parking-symbol {
+    font-size: 30px;
+    margin: 8px;
+}
+
+.slot-status {
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.slot-box.available {
+    border-color: #00bfa6;
+}
+
+.slot-box.available .slot-status {
+    color: #00d9bd;
+}
+
+.slot-box.occupied {
+    border-color: #d9534f;
+}
+
+.slot-box.occupied .slot-status {
+    color: #ff6b6b;
+}
+.sessions-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.sessions-table th {
+    background: #00aF9a;
+    color: white;
+
+    padding: 12px;
+
+    text-align: left;
+}
+.sessions-table td {
+    padding: 12px;
+
+    border-bottom: 1px solid #263a37;
+
+    color: #dddddd;
+}
+
+.sessions-table tr:hover {
+    background: #151d1c;
+}
+.session-active {
+    color: #00d9bd;
+    font-weight: bold;
+}
+
+.session-completed {
+    color: #999999;
+}
+
+.end-session-button {
+    padding: 7px 12px;
+    font-size: 13px;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.payment-modal {
+    background: #111111;
+
+    border: 1px solid #00bfa6;
+
+    border-radius: 8px;
+
+    padding: 25px;
+
+    width: 90%;
+    max-width: 400px;
+}
+.payment-modal h2 {
+    color: #00bfa6;
+}
+.payment-total {
+    color: #00d9bd;
+}
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+.cancel-button {
+    background: #444444;
+}
+.cancel-button:hover {
+    background: #555555;
+}
+.confirm-button {
+    background: #00aF9a;
+}
+
+.success {
+    color: #00d9bd;
+}
+
+.error {
+    color: #ff6b6b;
+}
+
+@media (max-width: 700px) {
+    .app {
+        width: 95%;
+    }
+    .sessions-table {
+        font-size: 13px;
+    }
+    .sessions-table th,
+    .sessions-table td {
+        padding: 8px;
+    }
+    .table-container {
+        overflow-x: auto;
+    }
+}
