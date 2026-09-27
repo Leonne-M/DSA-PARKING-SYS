@@ -4,7 +4,6 @@ function Sessions({
     refreshTrigger,
     onSessionEnded
 }) {
-
     const [sessions, setSessions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -12,94 +11,107 @@ function Sessions({
         useState(null);
     const [paymentDetails, setPaymentDetails] =
         useState(null);
+
     const getSessions = async () => {
         try {
             setLoading(true);
             setError("");
+
             const response = await fetch(
                 "http://127.0.0.1:5000/sessions"
             );
+
             const data = await response.json();
+
             if (!response.ok) {
                 throw new Error(
                     data.error ||
                     "Failed to fetch sessions"
                 );
-
             }
+
             setSessions(data);
+
         } catch (error) {
             setError(error.message);
+
         } finally {
             setLoading(false);
-
         }
     };
 
     useEffect(() => {
         getSessions();
-
     }, [refreshTrigger]);
+
     const openPayment = async (session) => {
         try {
             setError("");
+
             const response = await fetch(
                 `http://127.0.0.1:5000/session_payment/${session.session_id}`
             );
+
             const data = await response.json();
+
             if (!response.ok) {
                 throw new Error(
                     data.error ||
                     "Failed to calculate payment"
                 );
             }
+
             setSelectedSession(session);
             setPaymentDetails(data);
+
         } catch (error) {
             setError(error.message);
         }
     };
 
     const cancelPayment = () => {
-
         setSelectedSession(null);
         setPaymentDetails(null);
-
     };
 
     const confirmPayment = async () => {
         if (!selectedSession) {
             return;
         }
-        try {
 
+        try {
             setError("");
+
             const response = await fetch(
                 `http://127.0.0.1:5000/session_upd/${selectedSession.session_id}`,
                 {
                     method: "PUT"
                 }
             );
+
             const data = await response.json();
+
             if (!response.ok) {
                 throw new Error(
                     data.error ||
                     "Failed to confirm payment"
                 );
-
             }
+
             setSelectedSession(null);
             setPaymentDetails(null);
+
             if (onSessionEnded) {
                 onSessionEnded();
             }
-            getSessions();
-        } catch (error) {
 
+            getSessions();
+
+        } catch (error) {
             setError(error.message);
         }
-
     };
+
     if (loading) {
         return (
             <div>
@@ -107,13 +119,12 @@ function Sessions({
                 <p>Loading sessions...</p>
             </div>
         );
-
     }
-
 
     return (
         <div>
             <h2>Parking Sessions</h2>
+
             {error && (
                 <p className="error">
                     Error: {error}
@@ -121,45 +132,28 @@ function Sessions({
             )}
 
             {sessions.length === 0 ? (
-                <p>
-                    No parking sessions found.
-                </p>
-
+                <p>No parking sessions found.</p>
             ) : (
                 <div className="table-container">
                     <table className="sessions-table">
                         <thead>
                             <tr>
-                                <th>
-                                    ID
-                                </th>
-                                <th>
-                                    Vehicle
-                                </th>
-                                <th>
-                                    Type
-                                </th>
-                                <th>
-                                    Slot
-                                </th>
-                                <th>
-                                    Entry Time
-                                </th>
-                                <th>
-                                    Exit Time
-                                </th>
-                                <th>
-                                    Status
-                                </th>
-                                <th>
-                                    Action
-                                </th>
+                                <th>ID</th>
+                                <th>Vehicle</th>
+                                <th>Type</th>
+                                <th>Slot</th>
+                                <th>Entry Time</th>
+                                <th>Exit Time</th>
+                                <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
+
                         <tbody>
                             {sessions.map((session) => {
-                                const occupied =
+                                const active =
                                     session.exit_time === null;
+
                                 return (
                                     <tr
                                         key={
@@ -171,52 +165,54 @@ function Sessions({
                                                 session.session_id
                                             }
                                         </td>
+
                                         <td>
                                             {
                                                 session.vehicle_registration
                                             }
                                         </td>
+
                                         <td>
                                             {
                                                 session.vehicle_type ||
                                                 "Vehicle"
                                             }
                                         </td>
+
                                         <td>
                                             {
                                                 session.slot_name
                                             }
                                         </td>
+
                                         <td>
                                             {
                                                 session.entry_time
                                             }
                                         </td>
-                                        <td>
 
+                                        <td>
                                             {session.exit_time
                                                 ? session.exit_time
                                                 : "Still parked"}
-
                                         </td>
+
                                         <td>
                                             <span
                                                 className={
-                                                    occupied
+                                                    active
                                                         ? "session-active"
                                                         : "session-completed"
                                                 }
                                             >
-
-                                                {occupied
+                                                {active
                                                     ? "Active"
                                                     : "Completed"}
-
                                             </span>
                                         </td>
-                                        <td>
-                                            {occupied && (
 
+                                        <td>
+                                            {active && (
                                                 <button
                                                     className="end-session-button"
                                                     onClick={() =>
@@ -235,8 +231,8 @@ function Sessions({
                         </tbody>
                     </table>
                 </div>
-
             )}
+
             {selectedSession &&
                 paymentDetails && (
                     <div className="modal-overlay">
@@ -244,12 +240,15 @@ function Sessions({
                             <h2>
                                 Confirm Payment
                             </h2>
+
                             <p>
                                 Review the parking
                                 charges before ending
                                 the session.
                             </p>
+
                             <hr />
+
                             <p>
                                 <strong>
                                     Vehicle:
@@ -258,6 +257,7 @@ function Sessions({
                                     selectedSession.vehicle_registration
                                 }
                             </p>
+
                             <p>
                                 <strong>
                                     Slot:
@@ -266,6 +266,7 @@ function Sessions({
                                     selectedSession.slot_name
                                 }
                             </p>
+
                             <p>
                                 <strong>
                                     Entry:
@@ -274,6 +275,7 @@ function Sessions({
                                     paymentDetails.entry_time
                                 }
                             </p>
+
                             <p>
                                 <strong>
                                     Exit:
@@ -282,6 +284,7 @@ function Sessions({
                                     paymentDetails.exit_time
                                 }
                             </p>
+
                             <p>
                                 <strong>
                                     Duration:
@@ -290,34 +293,16 @@ function Sessions({
                                     paymentDetails.duration
                                 }
                             </p>
+
                             <hr />
-                            <p>
-                                <strong>
-                                    Rate:
-                                </strong>{" "}
-                                KSh{" "}
-                                {Number(
-                                    paymentDetails.rate
-                                ).toFixed(2)}
-                            </p>
-                            <p>
-                                <strong>
-                                    VAT (
-                                    {
-                                        paymentDetails.vat_rate
-                                    }%):
-                                </strong>{" "}
-                                KSh{" "}
-                                {Number(
-                                    paymentDetails.vat
-                                ).toFixed(2)}
-                            </p>
+
                             <h2 className="payment-total">
-                                Total: KSh{" "}
+                                Amount to Pay: KSh{" "}
                                 {Number(
-                                    paymentDetails.total
+                                    paymentDetails.fee
                                 ).toFixed(2)}
                             </h2>
+
                             <div className="modal-buttons">
                                 <button
                                     className="cancel-button"
@@ -327,6 +312,7 @@ function Sessions({
                                 >
                                     Cancel
                                 </button>
+
                                 <button
                                     className="confirm-button"
                                     onClick={
@@ -342,4 +328,5 @@ function Sessions({
         </div>
     );
 }
+
 export default Sessions;

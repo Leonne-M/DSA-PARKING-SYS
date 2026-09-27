@@ -337,125 +337,65 @@ def create_rates():
         conn.close()
 @app.route("/session_payment/<int:id>", methods=["GET"])
 def session_payment(id):
-
     conn = get_db()
-
     try:
-        session = conn.execute(
-            """
-            SELECT *
+        # Get the parking session
+        session = conn.execute("""
+            SELECT
+                session_id,
+                vehicle_registration,
+                slot_name,
+                entry_time,
+                exit_time
             FROM sessions
-            WHERE session_id=?
-            """,
-            (id,)
-        ).fetchone()
-
+            WHERE session_id = ?
+        """, (id,)).fetchone()
         if session is None:
-
             return jsonify({
                 "error": "Session not found"
             }), 404
         if session["exit_time"] is not None:
-
             return jsonify({
                 "error": "This session has already ended"
             }), 400
-
-        exit_time = datetime.now().strftime(
-            "%Y-%m-%d %H:%M:%S"
+        exit_time = datetime.now()
+        entry_time = datetime.fromisoformat(
+            session["entry_time"]
         )
-        entry = datetime.strptime(
-            session["entry_time"],
-            "%Y-%m-%d %H:%M:%S"
-        )
-
-        exit = datetime.strptime(
-            exit_time,
-            "%Y-%m-%d %H:%M:%S"
-        )
-        duration_seconds = int(
-            (exit - entry).total_seconds()
-        )
-        duration_hours = duration_seconds / 3600
-        billed_hours = max(
-            1,
-            int(duration_hours) if duration_hours.is_integer()
-            else int(duration_hours) + 1
-        )
-        rate = conn.execute(
-            """
-            SELECT *
-            FROM rates
-            WHERE duration >= ?
-            ORDER BY duration ASC
-            LIMIT 1
-            """,
-            (billed_hours,)
-        ).fetchone()
-
-        if rate is None:
-
-            rate = conn.execute(
-                """
-                SELECT *
-                FROM rates
-                ORDER BY duration DESC
-                LIMIT 1
-                """
-            ).fetchone()
-
-
-        if rate is None:
-
-            return jsonify({
-                "error": "No parking rates have been configured"
-            }), 400
-
-        base_price = float(rate["price"])
-
-        vat_rate = 0.16
-
-        vat = base_price * vat_rate
-        total = base_price + vat
-        total_minutes = duration_seconds // 60
-
-        display_hours = total_minutes // 60
-        display_minutes = total_minutes % 60
-
-
-        if display_hours > 0:
-
-            duration_text = (
-                f"{display_hours} hour(s) "
-                f"{display_minutes} minute(s)"
-            )
-
+        duration = exit_time - entry_time
+        total_seconds = duration.total_seconds()
+        total_minutes = total_seconds / 60
+        if total_minutes <= 30:
+            fee = 0
+        elif total_minutes <= 120:
+            fee = 50
+        elif total_minutes <= 240:
+            fee = 100
+        elif total_minutes <= 360:
+            fee = 300
         else:
-
-            duration_text = (
-                f"{display_minutes} minute(s)"
-            )
-
-
+            fee = 500
+        total_seconds_int = int(total_seconds)
+        hours = total_seconds_int // 3600
+        minutes = (total_seconds_int % 3600) // 60
+        if hours > 0:
+            duration_text = f"{hours} hour(s) {minutes} minute(s)"
+        else:
+            duration_text = f"{minutes} minute(s)"
         return jsonify({
-
-            "session_id": id,
+            "session_id": session["session_id"],
+            "vehicle_registration":
+                session["vehicle_registration"],
+            "slot_name": session["slot_name"],
             "entry_time": session["entry_time"],
-            "exit_time": exit_time,
-            "duration_seconds": duration_seconds,
+            "exit_time":
+                exit_time.strftime("%Y-%m-%d %H:%M:%S"),
             "duration": duration_text,
-            "billed_hours": billed_hours,
-            "rate_duration": rate["duration"],
-            "rate": round(base_price, 2),
-            "vat_rate": 16,
-            "vat": round(vat, 2),
-            "total": round(total, 2)
-
+            "total_minutes": round(total_minutes, 2),
+            "fee": fee
         }), 200
 
-
     finally:
-
         conn.close()
 if __name__ == "__main__":
     app.run(debug=True)

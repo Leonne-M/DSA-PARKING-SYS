@@ -1,0 +1,131 @@
+MODERN PARKING MANAGEMENT SYSTEM
+ALGORITHMS
+
+1. CREATE PARKING SLOT ALGORITHM
+
+START
+1. Enter name of the parking slot
+2. Check if the name of the parking slot has been provided
+3. Check if there is no similar slot name in the database
+4. If there are similar slot names in the database, display error message
+5. Else, create parking slot with status 'available'
+6. Store the parking slot in the database
+7. Display success message
+END
+
+2. DISPLAY PARKING SLOTS ALGORITHM
+
+START
+1. Request parking slots from the database
+2. Get name of the parking slot and the status
+3. Display slot name
+4. Display vehicle/parking symbol
+
+5. Display availability of the parking slot
+
+6. Refresh the display on change
+END
+3. REGISTRATION OF VEHICULES ALGORITHM
+
+START
+1. Prompt for vehicle Registration number
+2. Prompt for phone number of the driver
+3. Prompt for vehicle type
+4. Validate that all the details have been filled
+5. Search for available slots
+
+6. If no available slot:
+
+a. Display "No available parking slots"
+b. Stop registration
+7. Else:
+a. Store the vehicle details in the vehicle table
+b. Update the slot status to occupied
+c. Store the entry time
+d. Create parking session
+8. Display assigned parking slot
+END
+4. ASSIGN PARKING SLOTS ALGORITHM
+START
+1. Search for slots table where slot status is available
+2. Take the first available slot
+3. Assign the slot to the incoming vehicle
+
+4. Update the slot status to occupied
+5. Return the assigned slot
+6. If no slot is available return error
+END
+5. CREATE PARKING SESSIONS ALGORITHM
+START
+1. Take the vehicle information
+2. Take the slot assigned
+3. Get the current date and time
+4. Store the vehicle Registration number
+5. Store the assigned slot name
+6. Store the time of entry
+7. Leave the exit time blank because it is still parked
+8. Save the session in the sessions table
+END
+6. DURATION OF PARKING ALGORITHM
+START
+1. Get the time of entry
+2. Get the current time of the vehicle exiting
+3. Subtract the time of entry from the time of exit
+4. Convert the time to minutes
+5. Store/display the duration of parking
+END
+7. COST OF PARKING ALGORITHM
+START
+1. Get the total time of parking in minutes
+2. If time of parking is 30 minutes or less than:
+Fee= KSh 0
+3. Else if time of parking is 120 or less than:
+Fee= KSh 50
+4. Else if time of parking is 240 or less than:
+Fee= KSh 100
+5. Else if time of parking is 360 or less than:
+Fee= KSh 300
+6. Else:
+Fee= KSh 500
+7. Display the fee
+END
+8. PAYMENT CONFIRMATION AND END PARKING SESSION ALGORITHM
+START
+1. Select a parked vehicle
+2. Get the current duration of parking
+3. Get amount payable for the duration
+4. Display vehicle, slot, time of entry, time of exit, duration, amount
+5. Prompt for confirmation of payment
+6. If payment not confirmed, keep the session till it exits
+7. If payment is confirmed:
+a. Store the time of exit
+b. Confirm end of parking
+c. Update slot status to available
+d. Update the changes in the database
+8. Refresh the sessions and slots
+END
+9. COMPLETE PARKING SYSTEM ALGORITHM
+START
+1. Display all slots with their availability
+2. On arrival of a vehicle, register the vehicle
+3. Search for available parking slots
+4. Assign the available parking slot
+5. Update the slot status to occupied
+6. Create a parking session with time of entry
+7. On exit of the vehicle, get its session
+8. Get the duration of parking
+9. Get the cost of parking based on the duration
+10. Display amount payable
+11. Confirm payment
+12. Record exit time of the vehicle
+13. Update slot status to available
+14. Update the database
+15. Display updated sessions and slots
+END
+PARKING FEE STRUCTURE
+Duration Fee
+Up to 30 minutes KSh 0
+Up to 2 Hours KSh 50
+Up to 4 Hours KSh 100
+Up to 6 Hours KSh 300
+Over 6 Hours KSh 500

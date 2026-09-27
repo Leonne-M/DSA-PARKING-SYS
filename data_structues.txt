@@ -1,0 +1,150 @@
+MODERN PARKING MANAGEMENT SYSTEM
+DATA STRUCTURES
+
+1. INTRODUCTION
+
+The parking management system uses a combination of database structures and programming data structures to store, process and display parking information. The structures are chosen according to the operations required by the system such as registering vehicles, managing parking slots, tracking parking sessions and calculating parking fees.
+
+2. PARKING SLOTS TABLE
+
+The slots table keeps information about each parking slot.
+
+Main fields:
+- slot_id
+- slot_name
+- status
+
+The status can be:
+- available
+- occupied
+
+REASON FOR USE:
+The table provides permanent structure for storing information about all the parking slots and their current state. It allows the system to quickly know which parking spaces are available and which are occupied.
+
+3. VEHICLE TABLE
+
+The vehicle table keeps information about vehicles using the parking system.
+
+Main fields:
+- vehicle_id
+- vehicle_registration
+- phone_number
+- vehicle_type
+
+REASON FOR USE:
+The structure stores information about vehicles in an organized way allowing the system to associate a vehicle with its parking sessions.
+
+4. SESSIONS TABLE
+
+The sessions table keeps information about each parking session.
+
+Main fields:
+- session_id
+- vehicle_registration
+- slot_name
+- entry_time
+- exit_time
+
+REASON FOR USE:
+It allows the system to store the history of vehicles entering and exiting the parking area. An empty exit_time represents an active parking session.
+
+5. RATES TABLE
+
+The rates table keeps information about duration and price of parking.
+
+Main fields:
+- rate_id
+- duration
+- price
+
+REASON FOR USE:
+The structure provides the database with a place to store information about parking rate and manages the price data.
+
+6. DATABASE RECORDS
+
+Each record in the SQLite database represents a row of information.
+
+For example:
+- Each row in slots represents one parking slot.
+- Each row in vehicle represents one vehicle.
+- Each row in sessions represents one parking session.
+- Each row in rates represents one rate.
+
+REASON FOR USE:
+Records allow information to be stored in an organized and permanent way.
+
+7. PYTHON LISTS
+
+When data is retrieved from the database, multiple records can be represented as a Python list.
+
+For example, the list returned when retrieving parking sessions contains multiple session records.
+
+REASON FOR USE:
+Lists allow the application to store a collection of records and return multiple results to the web application.
+
+8. PYTHON DICTIONARIES
+
+Database rows can be represented as dictionaries using the column names as keys.
+
+For example:
+{
+
+"session_id": 1,
+"vehicle_registration": "KDA 123A",
+"slot_name": "A1"
+}
+
+REASON FOR USE:
+Dictionaries allow the application to access individual pieces of information by using meaningful field names rather than numerical indexes.
+
+9. REACT ARRAYS
+
+The React frontend stores collections such as parking slots and sessions in arrays.
+
+For example:
+- The slots array contains parking slot records.
+- The sessions array contains parking session records.
+
+REASON FOR USE:
+Arrays allow React to loop through multiple records and dynamically display them on the webpage.
+
+10. REACT STATE
+
+React state is used to store information that can change while the application is running.
+
+Examples include:
+- Current parking slots
+- Sessions
+- Loading status
+- Error messages
+- Selected payment session
+- Payment details
+
+REASON FOR USE:
+When state changes, React automatically updates the relevant part of the user interface.
+
+11. DATABASE RELATIONSHIPS
+
+The system links related information through relationships in the database.
+
+The vehicle registration number links a vehicle to its parking sessions.
+
+The slot name links a parking session to the parking slot it is using by the vehicle.
+
+This allows the system to know:
+- Which vehicle is parked.
+- Which slot the vehicle is using.
+- When the vehicle came in.
+- When the vehicle exited.
+
+12. WHY THESE DATA STRUCTURES ARE APPROPRIATE
+
+The chosen structures organize all of the different types of information that are needed by the parking system.
+
+Database tables provide a permanent structure for storing information.
+Database records represent each entity.
+Lists and arrays handle a collection of records.
+Dictionaries provide a convenient access to record fields.
+React state allows the web interface to update when parking information changes.
+
+Together, these structures allow the system to perform the required parking operations while keeping the system organized and manageable.
